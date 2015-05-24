@@ -1,0 +1,26 @@
+#!/bin/bash -x
+
+project=$1
+host='docker.janmyr.com'
+image="andersjanmyr/$project"
+dns="${project}.janmyr.com"
+
+env_file_option=''
+pushd ~/Projects/secrets
+if [ -f "$project/env" ]; then
+  scp -r $project $host:/tmp
+  env_file_option="--env-file /tmp/$project/env"
+fi
+popd
+
+ssh $host "\
+  docker pull $image; \
+  docker kill $project; \
+  docker rm $project; \
+  docker run -d \
+  -e VIRTUAL_HOST=$dns \
+  $env_file_option \
+  --name $project \
+  $image"
+
+
