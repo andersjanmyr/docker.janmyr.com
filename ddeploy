@@ -1,9 +1,13 @@
 #!/bin/bash -x
 
 project=$1
+hostnames=${2}
 host='docker.janmyr.com'
 image="andersjanmyr/$project"
 dns="${project}.janmyr.com"
+if [ -n "$hostnames" ]; then
+  dns="$dns,$hostnames"
+fi
 
 env_file_option=''
 pushd ~/Projects/secrets
