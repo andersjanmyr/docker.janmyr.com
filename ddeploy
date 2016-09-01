@@ -22,6 +22,7 @@ ssh $host "\
   docker kill $project; \
   docker rm $project; \
   docker run -d \
+  --restart unless-stopped \
   -e VIRTUAL_HOST=$dns \
   $env_file_option \
   --name $project \
